@@ -3,7 +3,7 @@ import os
 import json
 
 #daiy_path = os.getcwd()
-daiy_path = '../gh-pages/pac/whitelist.pac'
+daiy_path = '../gh-pages/pac'
 white_list = "whitelist.pac"
 
 # patterns
