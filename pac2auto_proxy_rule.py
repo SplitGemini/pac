@@ -19,6 +19,6 @@ if result != None:
     for key in jsonObj:
         lines.append(key)
     with open(white_list, "w", encoding="utf-8") as f:
-        f.write('@@||' + '\n@@||'.join(lines))
+        f.write('[AutoProxy 0.2.9]\n||' + '\n||'.join(lines))
 else:
     print("not matched")
