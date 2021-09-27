@@ -33,7 +33,7 @@ jobs:
           git clone https://github.com/pexcn/daily.git gh-pages -b gh-pages --depth 1 --single-branch
           git clone https://github.com/${{ github.repository }}.git
           cd pac
-          git checkout -B weekly
+          git checkout weekly
           python3 pac2auto_proxy_rule.py
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
