@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches: master
+  pull_request:
+    branches: master
+  schedule:
+    # workwaround for cannot set timezone, cron will start on Asia/Taipei 02:00
+    - cron: "0 18 * * 1"
+  workflow_dispatch:
+    inputs:
+      deploy:
+        description: 'Whether to deploy to gh-pages branch'
+        required: true
+        default: '0'
+
+env:
+  TZ: Asia/Taipei
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Build
+        run: ./generate.sh
+      - name: Deploy
+        if: ${{ github.event_name == 'schedule' || github.event.inputs.deploy == '1' }}
+        run: |
+          # clone gh-pages
+          git clone https://github.com/pexcn/daily.git gh-pages -b gh-pages --depth 1 --single-branch
+          git clone https://github.com/${{ github.repository }}.git
+          cd pac
+          git checkout -B weekly
+          python3 pac2auto_proxy_rule.py
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add .
+          git commit -m "$(date '+%Y-%m-%d %H:%M:%S')" || true
+          git push https://${{ github.repository_owner }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git weekly
